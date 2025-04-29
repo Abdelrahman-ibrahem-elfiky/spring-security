@@ -10,8 +10,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Controller;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class SpringSecurity{
@@ -26,24 +29,32 @@ public class SpringSecurity{
         return http.build() ;
     }
 
+//    store user by memory
+
+//    @Bean
+//    public UserDetailsService userDetails()
+//    {
+//        UserDetails user1= User.withUsername("abdelrahman")
+//                .password("test")
+//                .roles("ADMIN")
+//                .build();
+//
+//        UserDetails user2= User.withUsername("ahmed")
+//                .password("test")
+//                .roles("USER")
+//                .build();
+//        UserDetails user3= User.withUsername("mohamed")
+//                .password("test")
+//                .roles("TEACHER")
+//                .build();
+//        return new InMemoryUserDetailsManager(user1,user2,user3);
+//
+//    }
+
     @Bean
-    public UserDetailsService userDetails()
+    public UserDetailsService userDetailsService(DataSource dataSource)
     {
-        UserDetails user1= User.withUsername("abdelrahman")
-                .password("test")
-                .roles("ADMIN")
-                .build();
-
-        UserDetails user2= User.withUsername("ahmed")
-                .password("test")
-                .roles("USER")
-                .build();
-        UserDetails user3= User.withUsername("mohamed")
-                .password("test")
-                .roles("TEACHER")
-                .build();
-        return new InMemoryUserDetailsManager(user1,user2,user3);
-
+        return new JdbcUserDetailsManager(dataSource);
     }
     @Bean
     public PasswordEncoder passwordEncoder() {

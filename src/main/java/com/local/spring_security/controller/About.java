@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/pub/about")
 public class About {
 
-
     @GetMapping("/start")
     public String start()
     {
