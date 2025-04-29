@@ -11,9 +11,9 @@ import java.util.List;
 public class SubscriberSec implements UserDetails {
 
 
-    private subscriber subscriber;
+    private Subscriber subscriber;
 
-    public SubscriberSec(com.local.spring_security.model.subscriber subscriber) {
+    public SubscriberSec(Subscriber subscriber) {
         this.subscriber = subscriber;
     }
 
