@@ -29,7 +29,7 @@ public class SpringSecurity{
     {
         http
 //                .csrf().disable()
-                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .csrf().ignoringRequestMatchers("/tell/**").csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and()
                 .authorizeHttpRequests(auth->auth
                 .requestMatchers("/pub/**").permitAll()

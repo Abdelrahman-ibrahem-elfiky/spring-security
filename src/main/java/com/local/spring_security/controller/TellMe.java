@@ -1,17 +1,16 @@
 package com.local.spring_security.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/football")
-public class football {
+@RequestMapping("/tell")
+public class TellMe {
 
-    @PostMapping("/start")
-    public String start()
+    @PostMapping
+    public String TellMeAbout()
     {
-        return "welcome football page";
+        return "welcome to my page, please tell me about myself";
     }
 }
