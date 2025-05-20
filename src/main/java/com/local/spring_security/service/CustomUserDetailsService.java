@@ -4,6 +4,8 @@ import com.local.spring_security.dao.SubscribeRepo;
 import com.local.spring_security.model.Subscriber;
 import com.local.spring_security.model.SubscriberSec;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,7 +16,6 @@ import java.util.Optional;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-
     private SubscribeRepo subscribeRepo;
 
     @Autowired
