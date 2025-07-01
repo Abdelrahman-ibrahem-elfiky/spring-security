@@ -28,12 +28,19 @@ public class SpringSecurity{
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
     {
         http
-//                .csrf().disable()
-                .csrf().ignoringRequestMatchers("/tell/**").csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .and()
+                //prevent any attack from take my data
+                .csrf().disable()
+                //to create token for me by csrf to prevent any attack
+                //.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).
+                //to create csrf token and ignore a specific api called "tell"
+                //.csrf().ignoringRequestMatchers("/tell/**").csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                //.and()
                 .authorizeHttpRequests(auth->auth
                 .requestMatchers("/pub/**").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/football/**").hasAuthority("READ")
+                .requestMatchers("/swimming/**").hasAuthority("WRITE")
+                .requestMatchers("/basketball/**").hasAuthority("DELETE")
+                //.anyRequest().authenticated()
         ).formLogin().and().httpBasic();
         return http.build() ;
     }

@@ -1,6 +1,7 @@
 package com.local.spring_security.service;
 
 import com.local.spring_security.dao.SubscribeRepo;
+import com.local.spring_security.model.Authority;
 import com.local.spring_security.model.Subscriber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -41,13 +42,26 @@ public class CustomAuthProvider implements AuthenticationProvider {
         }else {
             if (passwordEncoder.matches(password,subscribers.get(0).getPassword()))
             {
-                List<GrantedAuthority>authorityList=new ArrayList<>();
-                authorityList.add(new SimpleGrantedAuthority(subscribers.get(0).getRole()));
-                return  new UsernamePasswordAuthenticationToken(username,password,authorityList);
+                //Before set authority
+                //List<GrantedAuthority>authorityList=new ArrayList<>();
+               // authorityList.add(new SimpleGrantedAuthority(subscribers.get(0).getRole()));
+                return  new UsernamePasswordAuthenticationToken(username,password,getAuthorites(subscribers.get(0).getAuthorities()));
             }else {
                 throw new BadCredentialsException("invalid password");
             }
         }
+    }
+
+
+    // get authority and convert to GrantedAuthority
+    public List<SimpleGrantedAuthority>getAuthorites(List<Authority>authorities)
+    {
+        List<SimpleGrantedAuthority> simpleGrantedAuthority=new ArrayList<>();
+        for (Authority authority:authorities)
+        {
+            simpleGrantedAuthority.add(new SimpleGrantedAuthority(authority.getName()));
+        }
+        return simpleGrantedAuthority;
     }
 
     @Override

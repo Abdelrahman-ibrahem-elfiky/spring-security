@@ -21,7 +21,7 @@ public class SubscriberSec implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
         List<GrantedAuthority>authorities=new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(subscriber.getRole()));
+        // authorities.add(new SimpleGrantedAuthority(subscriber.getRole()));
         return authorities;
     }
 
