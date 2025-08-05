@@ -1,5 +1,6 @@
 package com.local.spring_security.config;
 
+import com.local.spring_security.filter.FilterBefore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AnonymousAuthenticationProvider;
@@ -16,8 +17,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.filter.GenericFilterBean;
 
 import javax.sql.DataSource;
 
@@ -30,6 +33,8 @@ public class SpringSecurity{
         http
                 //prevent any attack from take my data
                 .csrf().disable()
+                //custom filter         me
+                .addFilterBefore(new FilterBefore(), BasicAuthenticationFilter.class)
                 //to create token for me by csrf to prevent any attack
                 //.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).
                 //to create csrf token and ignore a specific api called "tell"
@@ -39,7 +44,7 @@ public class SpringSecurity{
                 .requestMatchers("/pub/**").permitAll()
                 .requestMatchers("/football/**").hasAuthority("READ")
                 .requestMatchers("/swimming/**").hasAuthority("WRITE")
-                .requestMatchers("/basketball/**").hasAuthority("DELETE")
+                .requestMatchers("/basketball/**").hasAnyAuthority("DELETE","READ")
                 //.anyRequest().authenticated()
         ).formLogin().and().httpBasic();
         return http.build() ;
@@ -66,6 +71,8 @@ public class SpringSecurity{
 //        return new InMemoryUserDetailsManager(user1,user2,user3);
 //
 //    }
+
+
 
         @Bean
         public UserDetailsService userDetailsService(DataSource dataSource)
