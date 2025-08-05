@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,16 +33,19 @@ public class SpringSecurity{
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
     {
         http
-                //prevent any attack from take my data
+                // stateless jsessionIp
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                //to create token for me by csrf to prevent any attack
+                //.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                //to create csrf token and ignore a specific api called "tell"
+                //.csrf().ignoringRequestMatchers("/tell/**").csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                //.and()
+                //XSRF enable prevent any attack from take my data
                 .csrf().disable()
                 //custom filters         me
                 .addFilterBefore(new FilterBefore(), BasicAuthenticationFilter.class)
                 .addFilterAfter(new FilterAfter(), BasicAuthenticationFilter.class)
-                //to create token for me by csrf to prevent any attack
-                //.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).
-                //to create csrf token and ignore a specific api called "tell"
-                //.csrf().ignoringRequestMatchers("/tell/**").csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                //.and()
                 .authorizeHttpRequests(auth->auth
                 .requestMatchers("/pub/**").permitAll()
                 .requestMatchers("/football/**").hasAuthority("READ")

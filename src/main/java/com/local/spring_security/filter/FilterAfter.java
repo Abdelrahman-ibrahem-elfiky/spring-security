@@ -1,8 +1,6 @@
 package com.local.spring_security.filter;
 
 import jakarta.servlet.*;
-import jdk.swing.interop.SwingInterOpUtils;
-
 import java.io.IOException;
 
 public class FilterAfter implements Filter {
