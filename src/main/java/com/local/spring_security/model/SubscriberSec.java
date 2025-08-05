@@ -10,7 +10,6 @@ import java.util.List;
 
 public class SubscriberSec implements UserDetails {
 
-
     private Subscriber subscriber;
 
     public SubscriberSec(Subscriber subscriber) {

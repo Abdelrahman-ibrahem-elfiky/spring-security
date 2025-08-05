@@ -1,5 +1,6 @@
 package com.local.spring_security.config;
 
+import com.local.spring_security.filter.FilterAfter;
 import com.local.spring_security.filter.FilterBefore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,8 +34,9 @@ public class SpringSecurity{
         http
                 //prevent any attack from take my data
                 .csrf().disable()
-                //custom filter         me
+                //custom filters         me
                 .addFilterBefore(new FilterBefore(), BasicAuthenticationFilter.class)
+                .addFilterAfter(new FilterAfter(), BasicAuthenticationFilter.class)
                 //to create token for me by csrf to prevent any attack
                 //.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).
                 //to create csrf token and ignore a specific api called "tell"
