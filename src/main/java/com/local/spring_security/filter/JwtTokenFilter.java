@@ -22,25 +22,31 @@ import java.util.Set;
 
 public class JwtTokenFilter extends OncePerRequestFilter {
 
-    private static final String KEY="abdelrahman";
+    private static final String KEY="abdelrahman ibrahim abdo elfiky ";
     private static final String HADER="Jwt-Token";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
-        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
-        if (authentication!=null)
+        try {
+            System.out.println("inside jwt filter ");
+            Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+            if (authentication!=null)
+            {
+                SecretKey secretKey= Keys.hmacShaKeyFor(KEY.getBytes(StandardCharsets.UTF_8));
+                String jwt= Jwts.builder().setSubject("jwt token")
+                        .claim("email",authentication.getName())
+                        .claim("authorities",authorities(authentication.getAuthorities()))
+                        .setIssuedAt(new Date())
+                        .setExpiration(new Date(new Date().getTime()+30000))
+                        .signWith(secretKey)
+                        .compact();
+                response.setHeader(HADER,jwt);
+            }
+        }catch (Exception e)
         {
-            SecretKey secretKey= Keys.hmacShaKeyFor(KEY.getBytes(StandardCharsets.UTF_8));
-            String jwt= Jwts.builder().setSubject("jwt token")
-                    .claim("email",authentication.getName())
-                    .claim("authorities",authorities(authentication.getAuthorities()))
-                    .setIssuedAt(new Date())
-                    .setExpiration(new Date(new Date().getTime()+30000))
-                    .signWith(secretKey)
-                    .compact();
-            response.setHeader(HADER,jwt);
+            System.out.println(e.toString());
         }
+
         filterChain.doFilter(request,response);
     }
     private String authorities(Collection<? extends GrantedAuthority> authorities) {
@@ -52,7 +58,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        // this filter is disable when any request not name login
-        return !request.getServletPath().equals("/login");
+        // this filter is disable when any request not that
+        return !request.getServletPath().equals("/api/sign");
     }
 }

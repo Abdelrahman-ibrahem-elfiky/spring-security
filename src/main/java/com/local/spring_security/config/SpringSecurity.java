@@ -2,6 +2,7 @@ package com.local.spring_security.config;
 
 import com.local.spring_security.filter.FilterAfter;
 import com.local.spring_security.filter.FilterBefore;
+import com.local.spring_security.filter.JwtTokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AnonymousAuthenticationProvider;
@@ -44,9 +45,11 @@ public class SpringSecurity{
                 //XSRF enable prevent any attack from take my data
                 .csrf().disable()
                 //custom filters         me
+                .addFilterAfter(new JwtTokenFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(new FilterBefore(), BasicAuthenticationFilter.class)
                 .addFilterAfter(new FilterAfter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(auth->auth
+                .requestMatchers("/api/**").authenticated()
                 .requestMatchers("/pub/**").permitAll()
                 .requestMatchers("/football/**").hasAuthority("READ")
                 .requestMatchers("/swimming/**").hasAuthority("WRITE")
