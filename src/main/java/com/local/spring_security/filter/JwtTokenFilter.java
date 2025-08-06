@@ -1,5 +1,6 @@
 package com.local.spring_security.filter;
 
+import com.local.spring_security.constant.SecConstant;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
@@ -22,8 +23,7 @@ import java.util.Set;
 
 public class JwtTokenFilter extends OncePerRequestFilter {
 
-    private static final String KEY="abdelrahman ibrahim abdo elfiky ";
-    private static final String HADER="Jwt-Token";
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -32,7 +32,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
             if (authentication!=null)
             {
-                SecretKey secretKey= Keys.hmacShaKeyFor(KEY.getBytes(StandardCharsets.UTF_8));
+                SecretKey secretKey= Keys.hmacShaKeyFor(SecConstant.KEY.getBytes(StandardCharsets.UTF_8));
                 String jwt= Jwts.builder().setSubject("jwt token")
                         .claim("email",authentication.getName())
                         .claim("authorities",authorities(authentication.getAuthorities()))
@@ -40,7 +40,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                         .setExpiration(new Date(new Date().getTime()+30000))
                         .signWith(secretKey)
                         .compact();
-                response.setHeader(HADER,jwt);
+                response.setHeader(SecConstant.HEADER,jwt);
             }
         }catch (Exception e)
         {
